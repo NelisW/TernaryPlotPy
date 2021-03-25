@@ -3,10 +3,9 @@
    Written by C. P. H. Lewis while at the University of California, Berkeley, 2008-2009. """
 #TODO: use the transforms technique in matplotlib; see http://matplotlib.sourceforge.net/examples/api/custom_projection_example.html?highlight=subclass
 import pylab as p
+import numpy as np
 import matplotlib.cm as cm
 from math import sqrt
-from matplotlib.mlab import csv2rec
-from matplotlib.mlab import load
 from matplotlib.cbook import to_filehandle
 
 class SoilTrianglePlot:
@@ -30,8 +29,6 @@ class SoilTrianglePlot:
 
     def satisfies_bounds(self, point, limits):
         'point is 3 coordinates; limits is 3 pairs. Returns True or False (for closed set).'
-        global True
-        global False
         for i in [0, 1, 2]:
             if not (limits[i][0] <= point[i] <= limits[i][1]):
                 return False
@@ -167,6 +164,9 @@ class SoilTrianglePlot:
         xs, ys = self._toCart(coords)
         p.fill(xs, ys, **kwargs) 
 
+    def csv2rec(filename):
+        return np.recfromtxt(filename, dtype=None, delimiter=',', names=True, encoding='utf-8')
+
     def scatter_from_csv(self, filename, sand = 'sand', silt = 'silt', clay = 'clay', diameter = '', hue = '', tags = '', **kwargs):
         """Loads data from filename (expects csv format). Needs one header row with at least the columns {sand, silt, clay}. Can also plot two more variables for each point; specify the header value for columns to be plotted as diameter, hue. Can also add a text tag offset from each point; specify the header value for those tags.
         Note! text values (header entries, tag values ) need to be quoted to be recognized as text. """
@@ -180,36 +180,32 @@ class SoilTrianglePlot:
         if (clay in soilrec.dtype.names):
             count = count + 1
         if (count < 3):
-            print "ERROR: need columns for sand, silt and clay identified in ', filename"
+            print(f'ERROR: need columns for sand, silt and clay identified in {filename}')
         locargs = {'s': None, 'c': None}
         for (col, key) in ((diameter, 's'), (hue, 'c')):
             col = col.lower()
             if (col != '') and (col in soilrec.dtype.names):
                 locargs[key] = soilrec.field(col)
             else:
-                print 'ERROR: did not find ', col, 'in ', filename
+                print (f'ERROR: did not find {col} in {filename}')
         for k in kwargs:
             locargs[k] = kwargs[k]
         values = zip(*[soilrec.field(sand), soilrec.field(clay), soilrec.field(silt)])
-        print values
+        print(values)
         (xs, ys) = self._toCart(values)
         p.scatter(xs, ys, label='_', **locargs)
         if (tags != ''):
             tags = tags.lower()
             for (x, y, tag) in zip(*[xs, ys, soilrec.field(tags)]):
-                print x,
-                print y,
-                print tag
+                print(f'{x} {y} {tag}')
                 p.text(x + 1, y + 1, tag, fontsize=12)
         fh.close()
 
     def __init__(self, stitle = ''):
         global p
-        global True
         p.clf()
         p.axis('off')
         p.axis('equal')
-        p.hold(True)
         p.title(stitle)
         self.outline()
 
@@ -231,13 +227,13 @@ class SoilTrianglePlot:
         p.close()
 
 if (__name__ == '__main__'):
-    print 'producing demo graph trianglegraph_test.png'
+    print('producing demo graph trianglegraph_test.png')
     st = SoilTrianglePlot('Soil Texture')
-    st.text((65, 28, 7), 'Sandy clay loam', fontsize=9)
+    st.text((72, 25, 3), 'Sandy clay loam', fontsize=7)
 #    st.grid(([10, 20, 30, 40, 50, 60, 70, 80, 90], [25, 50, 75], [8, 52, 16]))
     st.soil_categories()
     st.line((30, 20, 50), (2, 98, 0), 'b:', label='line')
-    st.patch([[10, 90], [50, 70], [10, 90]], facecolor='#249090', edgecolor='#451212', label='translucent', alpha='0.5')
+    st.patch([[10, 90], [50, 70], [10, 90]], facecolor='#249090', edgecolor='#451212', label='translucent', alpha=0.5)
     st.scatter([(50, 20, 30), (10, 90, 0), (0, 50, 50), (22,60,18)], s=50, c='g', label='data')
     st.patch([[0, 100], [83, 92], [5, 33]], facecolor='burlywood', label='patch')
     st.show()
