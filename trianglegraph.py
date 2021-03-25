@@ -229,3 +229,15 @@ class SoilTrianglePlot:
     def close(self):
         global p
         p.close()
+
+if (__name__ == '__main__'):
+    print 'producing demo graph trianglegraph_test.png'
+    st = SoilTrianglePlot('Soil Texture')
+    st.text((65, 28, 7), 'Sandy clay loam', fontsize=9)
+#    st.grid(([10, 20, 30, 40, 50, 60, 70, 80, 90], [25, 50, 75], [8, 52, 16]))
+    st.soil_categories()
+    st.line((30, 20, 50), (2, 98, 0), 'b:', label='line')
+    st.patch([[10, 90], [50, 70], [10, 90]], facecolor='#249090', edgecolor='#451212', label='translucent', alpha='0.5')
+    st.scatter([(50, 20, 30), (10, 90, 0), (0, 50, 50), (22,60,18)], s=50, c='g', label='data')
+    st.patch([[0, 100], [83, 92], [5, 33]], facecolor='burlywood', label='patch')
+    st.show()
