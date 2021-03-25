@@ -214,7 +214,7 @@ class SoilTrianglePlot:
         (x, y) = self._toCart([loctriple])
         p.text(x[0], y[0], word, **kwargs)
 
-    def show(self, filename = 'trianglegraph_test'):
+    def show(self, filename):
         global p
         p.legend(loc=1)
         p.axis([-10, 110, -10, 110])
@@ -236,4 +236,4 @@ if (__name__ == '__main__'):
     st.patch([[10, 90], [50, 70], [10, 90]], facecolor='#249090', edgecolor='#451212', label='translucent', alpha=0.5)
     st.scatter([(50, 20, 30), (10, 90, 0), (0, 50, 50), (22,60,18)], s=50, c='g', label='data')
     st.patch([[0, 100], [83, 92], [5, 33]], facecolor='burlywood', label='patch')
-    st.show()
+    st.show('examples/trianglegraph_test')

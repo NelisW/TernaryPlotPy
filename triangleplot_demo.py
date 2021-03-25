@@ -7,9 +7,9 @@ import matplotlib.cm as cm
 #One to load data from a .csv file
 fstp = SoilTrianglePlot('Data read from triangleplot_demo.csv;\n size of marker increases with porosity')
 fstp.soil_categories()
-fstp.scatter_from_csv('triangleplot_demo.csv', diameter='porosity', hue='om', tags='site', cmap=cm.copper_r, alpha=0.5)
+fstp.scatter_from_csv('data/triangleplot_demo.csv', diameter='porosity', hue='om', tags='site', cmap=cm.copper_r, alpha=0.5)
 fstp.colorbar('Organic matter (%)')
-fstp.show('triangleplot_subtle')
+fstp.show('examples/triangleplot_subtle')
 
 from random import sample, randint, random #to make up a pile of data, in function randomtriples
 def randomtriples(count):
